@@ -1,17 +1,11 @@
-const cors = require("cors");
-const morgan = require("morgan");
 const crypto = require("crypto");
 const express = require("express");
 const contacts = require("./contacts");
-const schema = require("./schema/contact");
+const schema = require("../schema/contact");
 
-const jsonParser = express.json();
-const app = express();
+const router = express.Router();
 
-app.use(cors());
-app.use(morgan("combined"));
-
-app.get("/contacts", async (req, res)=>
+router.get("/contacts", async (req, res)=>
 {
     try
     {
@@ -24,14 +18,14 @@ app.get("/contacts", async (req, res)=>
         console.log(`Method - ${req.method};`);
         console.log(`Protocol - ${req.protocol};`);
         console.log(`Hostname - ${req.hostname};`);
-        console.log(`Url - ${req.url};`);
+        console.log(`Url - ${req.url};\n`);
     }
     catch (error)
     {
         res.status(500).send({ message: error });
     }
 });
-app.get("/contacts/:id", async (req, res) =>
+router.get("/contacts/:id", async (req, res) =>
 {
     try
     {
@@ -52,7 +46,7 @@ app.get("/contacts/:id", async (req, res) =>
             console.log("\n Get contact by id!\n");
 
             console.log(`Id - ${id};`);
-            console.log(`Type - ${typeof id};`);
+            console.log(`Type - ${typeof id};\n`);
         }
     }
     catch (error)
@@ -60,7 +54,7 @@ app.get("/contacts/:id", async (req, res) =>
         res.status(500).send({ message: error });
     }
 });
-app.post("/contacts", jsonParser, async (req, res) =>
+router.post("/contacts", async (req, res) =>
 {
     try
     {
@@ -79,17 +73,17 @@ app.post("/contacts", jsonParser, async (req, res) =>
         }
         else if (!newContact)
         {
-            console.log("\nContact not found!\n");
+            res.status(404).send({ message: "Contact not found!" });
 
-            return res.status(404).send({ message: "Contact not found!" });
+            console.log("\nContact not found!\n");
         }
         else
         {
+            res.status(201).send({ message: "Contact added!" });
+
             console.log("\nContact added!\n");
 
-            console.log(req.body);
-
-            return res.status(201).send({ message: "Contact added!" });
+            console.log(req.body + "\n");
         }
     }
     catch (error)
@@ -97,7 +91,7 @@ app.post("/contacts", jsonParser, async (req, res) =>
         res.status(500).send({ message: error });
     }
 });
-app.put("/contacts/:id", jsonParser, async (req, res) =>
+router.put("/contacts/:id", async (req, res) =>
 {
     try
     {
@@ -114,23 +108,23 @@ app.put("/contacts/:id", jsonParser, async (req, res) =>
         });
         if (typeof response.error !== "undefined")
         {
-            console.log("\nMissing fields!\n");
+            res.status(400).send("Missing fields!");
 
-            return res.status(400).send("Missing fields!");
+            console.log("\nMissing fields!\n");
         }
         else if (!updateContact)
         {
-            console.log("\nContact not found!\n");
+            res.status(404).send({ message: "Contact not found!" });
 
-            return res.status(404).send({ message: "Contact not found!" });
+            console.log("\nContact not found!\n");
         }
         else
         {
+            res.status(200).send({ message: "Contact updated!" });
+
             console.log("\nContact updated!\n");
 
-            console.log(req.body);
-
-            return res.status(200).send({ message: "Contact updated!" });
+            console.log(req.body + "\n");
         }
     }
     catch (error)
@@ -138,7 +132,7 @@ app.put("/contacts/:id", jsonParser, async (req, res) =>
         res.status(500).send({ message: error });
     }
 });
-app.delete("/contacts/:id", async (req, res) =>
+router.delete("/contacts/:id", async (req, res) =>
 {
     try
     {
@@ -164,7 +158,4 @@ app.delete("/contacts/:id", async (req, res) =>
         res.status(500).send({ message: error });
     }
 });
-app.listen(8000, () =>
-{
-    console.log("Server running at http://localhost:8000");
-});
+module.exports = router;

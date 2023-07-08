@@ -1,8 +1,8 @@
-const fs = require("node:fs/promises");
-const path = require("node:path");
 const crypto = require("crypto");
+const path = require("node:path");
+const fs = require("node:fs/promises");
 
-const filePath = path.join(__dirname, "./db/contacts.json");
+const filePath = path.join(__dirname, "../data/contacts.json");
 
 async function readContacts()
 {
