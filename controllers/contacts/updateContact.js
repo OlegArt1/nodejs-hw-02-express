@@ -1,5 +1,4 @@
 const Contacts = require("../../models/contacts");
-const ContactsRepository = require("../../repositories/contacts");
 
 async function updateContact (req, res)
 {
@@ -14,16 +13,8 @@ async function updateContact (req, res)
             phone: req.body.phone,
         };
         const updatedContact = await Contacts.findByIdAndUpdate(id, newContact, { new: true });
-        const updatedContactRepository = await ContactsRepository.updateContact(id, newContact);
-    /*
-        if (!updatedContact)
-        {
-            console.log("Contact not found!");
-
-            return res.status(404).send({ message: "Contact not found!" });
-        }
-    */
-        if (!updatedContactRepository)
+    
+        if (updatedContact === null)
         {
             console.log("Contact not found!");
 

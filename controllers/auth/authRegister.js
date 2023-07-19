@@ -24,7 +24,7 @@ async function registered (req, res, next)
                 message: "Registration validation error!"
             });
         }
-        if (user !== null)
+        else if (user !== null)
         {
             console.log("Registration conflict error!");
 
@@ -39,26 +39,29 @@ async function registered (req, res, next)
                 message: "Registration conflict error!"
             });
         }
-        const passwordHash = await bcrypt.hash(password, 10);
+        else
+        {
+            const passwordHash = await bcrypt.hash(password, 10);
 
-        await Users.create({ email, password: passwordHash, subscription });
+            await Users.create({ email, password: passwordHash, subscription });
   
-        console.log("Registration success response!");
+            console.log("Registration success response!");
   
-        res.status(201).json({
-            status: "Created",
-            code: 201,
-            contentType: "application/json",
-            responseBody:
-            {
-                user:
+            res.status(201).json({
+                status: "Created",
+                code: 201,
+                contentType: "application/json",
+                responseBody:
                 {
-                    email: req.body.email,
-                    subscription: req.body.subscription
-                }
-            },
-            message: "Registration success response!"
-        });
+                    user:
+                    {
+                        email: req.body.email,
+                        subscription: req.body.subscription
+                    }
+                },
+                message: "Registration success response!"
+            });
+        }
     }
     catch (error)
     {

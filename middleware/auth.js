@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 
-// const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_SECRET = 'h5Gd3kf7Fg3H35gDm7Ngd2hd';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function auth (req, res, next)
 {

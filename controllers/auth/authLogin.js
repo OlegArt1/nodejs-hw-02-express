@@ -29,7 +29,7 @@ async function login (req, res, next)
                 message: "Login validation error!"
             });
         }
-        if (user === null)
+        else if (user === null)
         {
             console.log("Login auth error!");
 
@@ -44,7 +44,7 @@ async function login (req, res, next)
                 message: "Login auth error!"
             });
         }
-        if (isMatch === false)
+        else if (isMatch === false)
         {
             console.log("Login auth error!");
 
@@ -59,27 +59,30 @@ async function login (req, res, next)
                 message: "Login auth error!"
             });
         }
-        const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
+        else
+        {
+            const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
 
-        await Users.updateOne({ _id: user._id }, { $set: { token } });
+            await Users.updateOne({ _id: user._id }, { $set: { token } });
 
-        console.log("Login success response!");
+            console.log("Login success response!");
 
-        return res.status(200).json({
-            status: "OK",
-            code: 200,
-            contentType: "application/json",
-            responseBody:
-            {
-                token: token,
-                user:
+            return res.status(200).json({
+                status: "OK",
+                code: 200,
+                contentType: "application/json",
+                responseBody:
                 {
-                    email: req.body.email,
-                    subscription: req.body.subscription
-                }
-            },
-            message: "Login success response!"
-        });
+                    token: token,
+                    user:
+                    {
+                        email: req.body.email,
+                        subscription: req.body.subscription
+                    }
+                },
+                message: "Login success response!"
+            });
+        }
     }
     catch (error)
     {

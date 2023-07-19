@@ -1,5 +1,4 @@
 const Contacts = require("../../models/contacts");
-const ContactsRepository = require("../../repositories/contacts");
 
 async function deleteContact (req, res)
 {
@@ -8,16 +7,8 @@ async function deleteContact (req, res)
         const { id } = req.params;
 
         const contactId = await Contacts.findByIdAndRemove(id);
-        const contactIdRepository = await ContactsRepository.deleteContact(id);
-    /*
-        if (!contactId)
-        {
-            console.log("Contact not found!");
-
-            return res.status(404).send({ message: "Contact not found!" });
-        }
-    */
-        if (!contactIdRepository)
+    
+        if (contactId.deletedCount === 0)
         {
             console.log("Contact not found!");
 

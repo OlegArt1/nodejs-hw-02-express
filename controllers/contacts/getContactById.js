@@ -1,5 +1,4 @@
 const Contacts = require("../../models/contacts");
-const ContactsRepository = require("../../repositories/contacts");
 
 async function getContactById (req, res)
 {
@@ -8,16 +7,8 @@ async function getContactById (req, res)
         const { id } = req.params;
 
         const contactId = await Contacts.findById(id);
-        const contactIdRepository = await ContactsRepository.getContactById(id);
-    /*
-        if (!contactId)
-        {
-            console.log("Contact not found!");
-
-            return res.status(404).send({ message: "Contact not found!" });
-        }
-    */
-        if (contactIdRepository === null)
+    
+        if (contactId === null)
         {
             console.log("Contact not found!");
 
@@ -29,7 +20,7 @@ async function getContactById (req, res)
             console.log(`Id - ${id};`);
             console.log(`Type - ${typeof id};`);
             
-            return res.status(200).json(contactIdRepository);
+            return res.status(200).json(contactId);
         }
     }
     catch (error)

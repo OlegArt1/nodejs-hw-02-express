@@ -23,21 +23,18 @@ async function current (req, res, next)
                 message: "Current user unauthorized error!"
             });
         }
-        else
-        {
-            console.log("Current user success response!");
+        console.log("Current user success response!");
 
-            res.status(200).json({
-                status: "OK",
-                code: 200,
-                contentType: "application/json",
-                responseBody:
-                {
-                    email: email,
-                    subscription: subscription
-                }
-            });
-        }
+        res.status(200).json({
+            status: "OK",
+            code: 200,
+            contentType: "application/json",
+            responseBody:
+            {
+                email: email,
+                subscription: subscription
+            }
+        });
     }
     catch (error)
     {

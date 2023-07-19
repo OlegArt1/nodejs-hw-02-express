@@ -1,12 +1,10 @@
 const Contacts = require("../../models/contacts");
-const ContactsRepository = require("../../repositories/contacts");
 
 async function getContacts (req, res)
 {
     try
     {
         const contacts = await Contacts.find();
-        const contactsRepository = await ContactsRepository.getContacts();
 
         console.log("Get contacts!");
         console.log(`Method - ${req.method};`);
@@ -14,7 +12,7 @@ async function getContacts (req, res)
         console.log(`Hostname - ${req.hostname};`);
         console.log(`Url - ${req.url};`);
 
-        return res.status(200).json(contactsRepository);
+        return res.status(200).json(contacts);
     }
     catch (error)
     {
