@@ -4,7 +4,9 @@ async function current (req, res, next)
 {
     try
     {
-        const user = await Users.find({ _id: req.user.id });
+        const { email, subscription } = req.body;
+
+        const user = await Users.find();
 
         if (user === null)
         {
@@ -21,18 +23,21 @@ async function current (req, res, next)
                 message: "Current user unauthorized error!"
             });
         }
-        console.log("Current user success response!");
+        else
+        {
+            console.log("Current user success response!");
 
-        res.status(200).json({
-            status: "OK",
-            code: 200,
-            contentType: "application/json",
-            responseBody:
-            {
-                email: req.body.email,
-                subscription: req.body.subscription
-            }
-        });
+            res.status(200).json({
+                status: "OK",
+                code: 200,
+                contentType: "application/json",
+                responseBody:
+                {
+                    email: email,
+                    subscription: subscription
+                }
+            });
+        }
     }
     catch (error)
     {
