@@ -1,118 +1,24 @@
-const crypto = require("crypto");
-const path = require("node:path");
-const fs = require("node:fs/promises");
+const express = require("express");
+const ContactsSchema = require("../schemas/schema");
+const validate = require("../middleware/validation");
 
-const filePath = path.join(__dirname, "../data/contacts.json");
+const getContactsController = require("../controllers/contacts/getContacts");
+const getContactByIdController = require("../controllers/contacts/getContactById");
+const getFilterFavoriteContactController = require("../controllers/contacts/getFilterContact");
+const postCreateContactController = require("../controllers/contacts/createContact");
+const putUpdateContactController = require("../controllers/contacts/updateContact");
+const patchUpdateStatusContactController = require("../controllers/contacts/updateStatusContact");
+const deleteContactController = require("../controllers/contacts/deleteContact");
 
-async function readContacts()
-{
-    const data = await fs.readFile(filePath, "utf-8");
+const router = express.Router();
 
-    return JSON.parse(data);
-};
-async function writeContacts (contacts)
-{
-    await fs.writeFile(filePath, JSON.stringify(contacts));
-};
-async function listContacts()
-{
-    try
-    {
-     // Variant I
-    /*
-        const contacts = await fs.readFile(filePath, "utf8")
-            .then((data) => res.status(200).json(JSON.parse(data)))
-            .catch((err) => res.status(500).send(err));
-    */
-     //
-     // Variant II
+router.use(express.json());
+router.get("/", validate(ContactsSchema.getContacts), getContactsController.getContacts);
+router.get("/:id", validate(ContactsSchema.getContactById), getContactByIdController.getContactById);
+router.get("/", getFilterFavoriteContactController.getFilterContact);
+router.post("/", validate(ContactsSchema.createContact), postCreateContactController.createContact);
+router.put("/:id", validate(ContactsSchema.updateContact), putUpdateContactController.updateContact);
+router.patch("/:id", validate(ContactsSchema.updateContact), patchUpdateStatusContactController.updateStatusContact);
+router.delete("/:id", validate(ContactsSchema.deleteContact), deleteContactController.deleteContact);
 
-        const contacts = await readContacts();
-    
-        return contacts;
-     //
-    }
-    catch (error)
-    {
-        console.error(error);
-    }
-};
-async function getById (id)
-{
-    try
-    {
-        const contacts = await listContacts();
-
-        const contactId = contacts.find((contact) => contact.id === id);
-
-        return contactId;
-    }
-    catch (error)
-    {
-        console.error(error);
-    }
-};
-async function addContact (contact)
-{
-    try
-    {
-        const contacts = await readContacts();
-  
-        const newContact = { ...contact, id: crypto.randomUUID() };
-
-        contacts.push(newContact);
-
-        await writeContacts(contacts);
-
-        return newContact;
-    }
-    catch (error)
-    {
-        console.error(error);
-    }
-};
-async function updateContact (id, contact)
-{
-    try
-    {
-        const contacts = await readContacts();
-
-        const index = contacts.findIndex((contact) => contact.id === id);
-      
-        const updatedContact =  
-        [
-            ...contacts.slice(0, index),
-
-            { ...contact, id },
-
-            ...contacts.slice(index + 1)
-        ];
-        await writeContacts(updatedContact);
-  
-        return { ...contact, id };
-    }
-    catch (error)
-    {
-        console.error(error);
-    }
-};
-async function removeContact (id)
-{
-    try
-    {
-        const contacts = await listContacts();
-
-        const index = contacts.findIndex((contact) => contact.id === id);
-
-        const removeContact = [ ...contacts.slice(0, index), ...contacts.slice(index + 1) ];
-
-        await writeContacts(removeContact);
-
-        return removeContact;
-    }
-    catch (error)
-    {
-        console.error(error);
-    }
-};
-module.exports = { listContacts, getById, addContact, updateContact, removeContact };
+module.exports = router;
