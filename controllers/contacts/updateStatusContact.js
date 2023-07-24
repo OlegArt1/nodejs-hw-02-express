@@ -1,25 +1,34 @@
-const Contacts = require("../../models/contacts");
+const ContactById = require("../../repositories/contacts/contacts");
+const ContactsRepository = require("../../repositories/contacts/contacts");
 
-async function updateStatusContact (req, res)
+async function updateStatusContact (req, res, next)
 {
+    const { id } = req.params;
+    
     try
     {
-        const { id } = req.params;
+        const contactId = await ContactById.getBookById(id);
 
-        const newContact =
+        const contactStatus =
         {
             favorite: req.body.favorite,
         };
-        const updatedContact = await Contacts.findByIdAndUpdate(id, newContact, { new: true });
-    
-        if (updatedContact === null)
+        if (!contactId)
         {
             console.log("Contact not found!");
 
             return res.status(404).send({ message: "Contact not found!" });
         }
+        else if (typeof contactStatus.favorite !== "boolean" && typeof contactStatus.favorite !== "undefined")
+        {
+            console.log("Missing field favorite!");
+
+            return res.status(400).send({ message: "Missing field favorite!" });
+        }
         else
         {
+            await ContactsRepository.updateContact(id, contactStatus);
+            
             console.log("Contact updated!");
             console.log(req.body);
 
@@ -29,9 +38,11 @@ async function updateStatusContact (req, res)
     catch (error)
     {
         console.log("Missing field favorite!");
-        console.log(error);        
-    
-        return res.status(400).send({ message: "Missing field favorite!" });
+        console.log(error);
+
+        res.status(400).send({ message: "Missing field favorite!" });
+
+        return next(error);
     }
 };
 module.exports = { updateStatusContact };

@@ -1,14 +1,15 @@
-const Contacts = require("../../models/contacts");
+const ContactById = require("../../repositories/contacts/contacts");
+const ContactsRepository = require("../../repositories/contacts/contacts");
 
-async function deleteContact (req, res)
+async function deleteContact (req, res, next)
 {
+    const { id } = req.params;
+    
     try
     {
-        const { id } = req.params;
+        const contactId = await ContactById.getContactById(id);
 
-        const contactId = await Contacts.findByIdAndRemove(id);
-    
-        if (contactId.deletedCount === 0)
+        if (!contactId)
         {
             console.log("Contact not found!");
 
@@ -16,6 +17,8 @@ async function deleteContact (req, res)
         }
         else
         {
+            await ContactsRepository.deleteContact(id);
+
             console.log("Contact deleted!");
 
             return res.status(200).send({ message: "Contact deleted!" });
@@ -25,8 +28,10 @@ async function deleteContact (req, res)
     {
         console.log("Internal server error!");
         console.log(error);
-        
-        return res.status(500).send({ message: "Internal server error!" });
+
+        res.status(500).send({ message: "Internal server error!" });
+
+        return next(error);
     }
 };
 module.exports = { deleteContact };

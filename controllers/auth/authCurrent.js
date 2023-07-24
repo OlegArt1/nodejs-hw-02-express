@@ -1,12 +1,10 @@
-const Users = require("../../models/users");
+const User = require("../../models/users");
 
 async function current (req, res, next)
 {
     try
     {
-        const { email, subscription } = req.body;
-
-        const user = await Users.find();
+        const user = await User.find({ _id: req.user.id });
 
         if (user === null)
         {
@@ -23,18 +21,21 @@ async function current (req, res, next)
                 message: "Current user unauthorized error!"
             });
         }
-        console.log("Current user success response!");
+        else
+        {
+            console.log("Current user success response!");
 
-        res.status(200).json({
-            status: "OK",
-            code: 200,
-            contentType: "application/json",
-            responseBody:
-            {
-                email: email,
-                subscription: subscription
-            }
-        });
+            res.status(200).json({
+                status: "OK",
+                code: 200,
+                contentType: "application/json",
+                responseBody:
+                {
+                    email: req.body.email,
+                    subscription: req.body.subscription
+                }
+            });
+        }
     }
     catch (error)
     {

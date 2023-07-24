@@ -1,13 +1,12 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 
-const JWT_SECRET = process.env.JWT_SECRET;
+// const JWT_SECRET = process.env.JWT_SECRET; \\
+const JWT_SECRET = 'd5hddr4h43hgf5gfg';
 
-function auth (req, res, next)
+function authorization (req, res, next)
 {
     const authHeader = req.headers.authorization;
-
-    const [bearer, token] = authHeader.split(" ", 2);
 
     if (typeof authHeader !== "string")
     {
@@ -15,6 +14,8 @@ function auth (req, res, next)
 
         return res.status(401).json({ error: "No token provided!" });
     }
+    const [bearer, token] = authHeader.split(" ", 2);
+
     if (bearer !== "Bearer")
     {
         console.log("No token provided!");
@@ -28,7 +29,7 @@ function auth (req, res, next)
             if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError")
             {
                 console.log("Token error!");
-                
+
                 return res.status(401).json({ error: "Token error!" });
             }
             return next(err);
@@ -39,46 +40,21 @@ function auth (req, res, next)
 
             if (user === null)
             {
-                console.log("Middleware unauthorized error!");
+                console.log("Token error!");
 
-                return res.status(401).json({
-                    status: "Unauthorized",
-                    code: 401,
-                    contentType: "application/json",
-                    responseBody:
-                    {
-                        message: "Not authorized."
-                    },
-                    message: "Middleware unauthorized error!"
-                });
+                return res.status(401).json({ error: "Token error!" });
             }
-            if (user.token === null)
+            else
             {
-                console.log("Middleware unauthorized error!");
+                console.log(decode);
 
-                return res.status(401).json({
-                    status: "Unauthorized",
-                    code: 401,
-                    contentType: "application/json",
-                    responseBody:
-                    {
-                        message: "Not authorized."
-                    },
-                    message: "Middleware unauthorized error!"
-                });
-            }            
-            req.user = { id: user._id, email: user.email };
+                req.user = { id: user._id, name: user.name };
 
-            console.log(req.user);
-
-            console.log(decode);
-                
-            next();
+                next();
+            }
         }
         catch (error)
         {
-            console.log("Internal server error!");
-
             console.log(error);
 
             res.status(500).send({ message: "Internal server error!" });
@@ -86,5 +62,5 @@ function auth (req, res, next)
             return next(error);
         }
     });
-}
-module.exports = auth;
+};
+module.exports = authorization;

@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const User = require("./users");
-
 const contactSchema = new mongoose.Schema(
 {
     name:
@@ -26,8 +24,9 @@ const contactSchema = new mongoose.Schema(
     {
         type: mongoose.Types.ObjectId,
         ref: 'user',
-    }
+    },
 },
-{ versionKey: false });
-
-module.exports = mongoose.model("Contacts", contactSchema);
+{
+    versionKey: false,
+});
+module.exports = mongoose.model("Contact", contactSchema);

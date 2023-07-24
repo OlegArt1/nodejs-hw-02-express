@@ -1,14 +1,14 @@
-const Contacts = require("../../models/contacts");
+const ContactsRepository = require("../../repositories/contacts/contacts");
 
-async function getContactById (req, res)
+async function getContactById (req, res, next)
 {
+    const { id } = req.params;
+    
     try
     {
-        const { id } = req.params;
-
-        const contactId = await Contacts.findById(id);
+        const contactId = await ContactsRepository.getContactById(id);
     
-        if (contactId === null)
+        if (!contactId)
         {
             console.log("Contact not found!");
 
@@ -28,7 +28,9 @@ async function getContactById (req, res)
         console.log("Internal server error!");
         console.log(error);
 
-        return res.status(500).send({ message: "Internal server error!" });
+        res.status(500).send({ message: "Internal server error!" });
+
+        return next(error);
     }
 };
 module.exports = { getContactById };

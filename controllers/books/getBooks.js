@@ -1,18 +1,18 @@
-const ContactsRepository = require("../../repositories/contacts/contacts");
+const BooksRepository = require("../../repositories/books/books");
 
-async function getContacts (req, res, next)
+async function getBooks (req, res, next)
 {
     try
     {
-        const contacts = await ContactsRepository.getContacts();
+        const books = await BooksRepository.getBooks();
 
-        console.log("Get contacts!");
+        console.log("Get books!");
         console.log(`Method - ${req.method};`);
         console.log(`Protocol - ${req.protocol};`);
         console.log(`Hostname - ${req.hostname};`);
         console.log(`Url - ${req.url};`);
 
-        return res.status(200).json(contacts);
+        return res.status(200).json(books);
     }
     catch (error)
     {
@@ -24,4 +24,4 @@ async function getContacts (req, res, next)
         return next(error);
     }
 };
-module.exports = { getContacts };
+module.exports = { getBooks };

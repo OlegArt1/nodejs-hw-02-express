@@ -1,10 +1,10 @@
-const Users = require("../../models/users");
+const User = require("../../models/users");
 
 async function logout (req, res, next)
 {
     try
     {
-        const user = await Users.updateOne({ _id: req.user.id }, { $set: { token: null } });
+        const user = await User.updateOne({ _id: req.user.id }, { $set: { token: null } });
 
         if (user === null)
         {
@@ -21,9 +21,12 @@ async function logout (req, res, next)
                 message: "Logout unauthorized error!"
             });
         }
-        console.log("Logout success response!");
+        else
+        {
+            console.log("Logout success response!");
 
-        return res.status(204).end();
+            return res.status(204).end();
+        }
     }
     catch (error)
     {

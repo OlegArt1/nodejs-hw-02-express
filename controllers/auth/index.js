@@ -1,12 +1,12 @@
-const authRegister = require("./authRegister");
-const authLogin = require("./authLogin");
-const authLogout = require("./authLogout");
-const authCurrent = require("./authCurrent");
+const Registration = require("./authRegister");
+const Login = require("./authLogin");
+const Logout = require("./authLogout");
+const Current = require("./authCurrent");
 
 module.exports =
 {
-    authRegister,
-    authLogin,
-    authLogout,
-    authCurrent,
+    Registration,
+    Login,
+    Logout,
+    Current,
 };
