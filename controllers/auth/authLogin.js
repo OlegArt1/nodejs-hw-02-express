@@ -64,10 +64,10 @@ async function login (req, res, next)
         {
             const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
 
-            await User.updateOne({ _id: user._id }, { $set: { token } });
+            const loginId = await User.updateOne({ _id: user._id }, { $set: { token } });
 
             console.log("Login success response!");
-
+            
             return res.status(200).json({
                 status: "OK",
                 code: 200,

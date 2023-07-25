@@ -3,12 +3,13 @@ const SizeImage = require("../../middleware/resizeImage");
 
 async function updateAvatar (req, res, next)
 {
-    const { id } = req.params;
-    const { path: temp_upload } = req.file;
+    const { email } = req.body;
     
     try
     {
-        const user = await UsersModel.findByIdAndUpdate(id,
+        const userId = await UsersModel.findOne({ email });
+
+        const user = await UsersModel.findByIdAndUpdate(userId.id,
             
             { avatarURL: req.file.filename },
             
