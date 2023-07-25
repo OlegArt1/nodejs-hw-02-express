@@ -1,5 +1,5 @@
-const ContactById = require("../../repositories/contacts/contacts");
-const ContactsRepository = require("../../repositories/contacts/contacts");
+const ContactById = require("../../repositories/contacts");
+const ContactsRepository = require("../../repositories/contacts");
 
 async function updateStatusContact (req, res, next)
 {
