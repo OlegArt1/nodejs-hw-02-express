@@ -29,6 +29,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 1000000 } });
 
-router.patch("/:id/avatars", upload.single("image", UpdateAvatar.uploadAvatar));
+router.patch("/:id/avatars", upload.single("image", UpdateAvatar.updateAvatar));
 
 module.exports = router;

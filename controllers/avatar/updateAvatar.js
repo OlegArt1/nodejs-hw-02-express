@@ -1,6 +1,6 @@
 const UsersModel = require("../../models/users");
 
-async function uploadAvatar (req, res, next)
+async function updateAvatar (req, res, next)
 {
     const { id } = req.params;
   
@@ -30,4 +30,4 @@ async function uploadAvatar (req, res, next)
         return next(error);
     }
 };
-module.exports = { uploadAvatar };
+module.exports = { updateAvatar };

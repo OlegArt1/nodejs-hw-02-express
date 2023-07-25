@@ -1,4 +1,4 @@
-const UpdateAvatar = require("./uploadAvatar");
+const UpdateAvatar = require("./updateAvatar");
 
 module.exports =
 {
