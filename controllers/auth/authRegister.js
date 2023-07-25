@@ -11,6 +11,8 @@ async function registered (req, res, next)
     {
         const user = await User.findOne({ email });
   
+        const users = await User.find().select({ id: 1 });
+
         if (typeof email !== "string")
         {
             console.log("Registration validation error!");
@@ -48,8 +50,7 @@ async function registered (req, res, next)
             const avatarUrl = gravatar.url(email, { protocol: 'https', format: 'png' });
       
             console.log("You are now registered!");
-            console.log(`Avatar url: ${avatarUrl};`);
-      
+            
             await User.create({ email, password: passwordHash, subscription, avatarURL: avatarUrl });
 
             return res.status(201).json({
