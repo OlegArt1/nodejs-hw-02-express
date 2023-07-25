@@ -1,4 +1,4 @@
-const ContactsModel = require("../../models/contacts");
+const ContactsModel = require("../models/contacts");
 
 function getContacts ()
 {
