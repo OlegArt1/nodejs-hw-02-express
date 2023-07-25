@@ -1,9 +1,11 @@
 const UsersModel = require("../../models/users");
+const SizeImage = require("../../middleware/resizeImage");
 
 async function updateAvatar (req, res, next)
 {
     const { id } = req.params;
-  
+    const { path: temp_upload } = req.file;
+    
     try
     {
         const user = await UsersModel.findByIdAndUpdate(id,
@@ -20,6 +22,8 @@ async function updateAvatar (req, res, next)
         }
         else
         {
+            await SizeImage.resizeImage(temp_upload);
+
             return res.status(200).json(user);
         }
     }

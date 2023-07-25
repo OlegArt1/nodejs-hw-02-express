@@ -1,17 +1,17 @@
 const Jimp = require("jimp");
 
-async function resizeImage (tempUpload)
+async function resizeImage (sizeImage)
 {
-    await Jimp.read(tempUpload)
+    await Jimp.read(sizeImage)
         .then((avatar) =>
         {
-            return avatar.resize(250, 250).write(tempUpload);
+            return avatar.resize(250, 250).write(sizeImage);
         })
         .catch((err) =>
         {
             throw err;
         });
 
-    return tempUpload;
+    return sizeImage;
 };
-module.exports = resizeImage;
+module.exports = { resizeImage };
