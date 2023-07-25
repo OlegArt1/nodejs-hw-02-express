@@ -1,10 +1,6 @@
-const Avatar = require("./getAvatar");
-const UploadAvatar = require("./uploadAvatar");
-const UpdateAvatar = require("./updateAvatar");
+const UpdateAvatar = require("./uploadAvatar");
 
 module.exports =
 {
-    Avatar,
-    UploadAvatar,
     UpdateAvatar,
 };

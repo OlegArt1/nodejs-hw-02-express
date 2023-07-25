@@ -6,7 +6,7 @@ const crypto = require("node:crypto");
 
 const
 {
-    UploadAvatar, UpdateAvatar,
+    UpdateAvatar,
 }
 = require("../controllers/avatar/index");
 
@@ -18,21 +18,17 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb)
     {
-     // 560fc0fd-8092-41ad-ab08-bb6094071f09
         const uniqueSuffix = crypto.randomUUID();
-     // file.originalname: TrevorPhilips-GTAV.png
-        const ext = path.extname(file.originalname); // .png \\
+    
+        const ext = path.extname(file.originalname);
 
-     // TrevorPhilips-GTAV
         const baseName = path.basename(file.originalname, ext);
 
-     // TrevorPhilips-GTAV-560fc0fd-8092-41ad-ab08-bb6094071f09.png
         cb(null, `${baseName}-${uniqueSuffix}${ext}`);
     },
 });
-const upload = multer({ storage, limits: { fileSize: 1000000 } }); // 1 MB \\
+const upload = multer({ storage, limits: { fileSize: 1000000 } });
 
-router.post("/:id/avatars", upload.single("image"), UploadAvatar.uploadAvatar);
-router.patch("/avatars", upload.single("image", UpdateAvatar.updateAvatar));
+router.patch("/:id/avatars", upload.single("image", UpdateAvatar.uploadAvatar));
 
 module.exports = router;
