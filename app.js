@@ -1,14 +1,17 @@
+const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
-const router = require("./routers/index");
+
+const routes = require("./routers");
+require("./db");
 
 const app = express();
 
 app.use(cors());
-app.use(express.json());
 app.use(morgan("combined"));
-app.use(router);
+app.use("/api", routes);
+app.use("/avatars", express.static(path.join(__dirname, "public/avatars")));
 app.listen(8000, () =>
 {
     console.log("Server running at http://localhost:8000");
