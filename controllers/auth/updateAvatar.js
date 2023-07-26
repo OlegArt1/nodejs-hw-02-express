@@ -7,23 +7,23 @@ require("dotenv").config();
 const User = require("../../models/users");
 const { resizeImage } = require("../../middleware/resizeImage");
 
-const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
-
 async function updateAvatar (req, res, next)
 {
+    const { id } = req.body;
+
     try
     {
-        const { id } = req.body;
+        const pathAvatar = path.join(__dirname, "../../", "public", "avatars");
     
         const { path: tempUpload, originalname } = req.file;
     
         await resizeImage(tempUpload);
     
-        const filename = `${id}_${originalname}`;
+        const filename = `${crypto.randomUUID()}_${originalname}`;
     
-        const resultUpload = path.join(avatarsDir, filename);
+        const result = path.join(pathAvatar, filename);
     
-        await fs.rename(tempUpload, resultUpload);
+        await fs.rename(tempUpload, result);
     
         const avatarUrl = path.join("avatars", filename);
     
