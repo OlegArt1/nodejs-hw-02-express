@@ -1,37 +1,32 @@
-const UsersModel = require("../../models/users");
-const SizeImage = require("../../middleware/resizeImage");
+const Jimp = require("jimp");
+const path = require("path");
+const fs = require("fs/promises");
 
-async function updateAvatar (req, res, next)
+require("dotenv").config();
+
+const User = require("../../models/users");
+const { resizeImage } = require("../../middleware/resizeImage");
+
+const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
+
+async function updateAvatar (req, res)
 {
-    const { id } = req.params;
-    const { tempUpload } = req.file;
-    
-    try
-    {
-        const user = await UsersModel.findByIdAndUpdate(id,
-            
-            { avatarURL: req.file.filename },
-            
-            { new: true }).select({ name: 1, email: 1, avatarURL: 1 });
-  
-        if (user === null)
-        {
-            console.log("User not found!");
+    const { id } = req.body;
 
-            return res.status(404).json({ message: "User not found!" });
-        }
-        else
-        {
-            await SizeImage.resizeImage(tempUpload);
+    const { path: tempUpload, originalname } = req.file;
 
-            return res.status(200).json(user);
-        }
-    }
-    catch (error)
-    {
-        console.log(error);
-        
-        return next(error);
-    }
+    await resizeImage(tempUpload);
+
+    const filename = `${id}_${originalname}`;
+
+    const resultUpload = path.join(avatarsDir, filename);
+
+    await fs.rename(tempUpload, resultUpload);
+
+    const avatarUrl = path.join("avatars", filename);
+
+    const avatar = await User.findByIdAndUpdate(id, { avatarUrl });
+
+    res.status(200).json({ avatar: avatarUrl });
 };
 module.exports = { updateAvatar };
