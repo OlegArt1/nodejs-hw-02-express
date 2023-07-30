@@ -1,11 +1,7 @@
 require("dotenv").config();
 
 const User = require("../../models/users");
-const
-{
-    sendEmail,
-}
-= require("../../helpers/index");
+const { sendEmail } = require("../../helpers/index");
 
 async function resendVerifyEmail (req, res, next)
 {
@@ -14,8 +10,7 @@ async function resendVerifyEmail (req, res, next)
     try
     {
         const user = await User.findOne({ email });
-        const userVerify = await User.findOne({ verify });
-
+        
         if (typeof user === "undefined")
         {
             console.log("Missing required field email!");     
@@ -31,7 +26,7 @@ async function resendVerifyEmail (req, res, next)
                 messageError: "Missing required field email"
             });
         }
-        if (userVerify === true)
+        if (user.verify)
         {
             console.log("Verification has already been passed!");
 

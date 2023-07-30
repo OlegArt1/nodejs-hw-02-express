@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-function sendEmail (message)
+async function sendEmail (message)
 {
     const transport = nodemailer.createTransport({
         host: "sandbox.smtp.mailtrap.io",
