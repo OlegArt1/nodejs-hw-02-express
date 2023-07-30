@@ -1,10 +1,14 @@
+const crypto = require("node:crypto");
+const path = require("node:path");
+
 const multer = require("multer");
 const express = require("express");
 
-const path = require("node:path");
-const crypto = require("node:crypto");
-
-const { UpdateAvatar } = require("../controllers/auth/index");
+const
+{
+    Avatar, VerificationEmail,
+}
+= require("../controllers/auth/index");
 
 const router = express.Router();
 
@@ -27,6 +31,7 @@ const storage = multer.diskStorage(
 });
 const upload = multer({ storage, limits: { fileSize: 1000000 } });
 
-router.patch("/avatars", upload.single("image"), UpdateAvatar.updateAvatar);
+router.get("/verify/:token", VerificationEmail.verify);
+router.patch("/avatar", upload.single("image"), Avatar.updateAvatar);
 
 module.exports = router;

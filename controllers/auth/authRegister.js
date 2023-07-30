@@ -1,23 +1,22 @@
+const crypto = require("node:crypto");
 const bcrypt = require("bcrypt");
-const gravatar = require("gravatar");
 
 const User = require("../../models/users");
+const { sendEmail } = require("../../helpers/index");
 
 async function registered (req, res, next)
 {
-    const { email, password, subscription } = req.body;
+    const { email, password } = req.body;
   
     try
     {
         const user = await User.findOne({ email });
   
-        const users = await User.find().select({ id: 1 });
-
         if (typeof email !== "string")
         {
             console.log("Registration validation error!");
         
-            res.status(400).send({
+            return res.status(400).send({
                 status: "Bad request",
                 code: 400,
                 contentType: "application/json",
@@ -28,7 +27,7 @@ async function registered (req, res, next)
                 messageError: "Registration validation error"
             });
         }
-        else if (user !== null)
+        if (user !== null)
         {
             console.log("Registration conflict error!");
 
@@ -44,15 +43,18 @@ async function registered (req, res, next)
             });
         }
         else
-        {
+        {      
             const passwordHash = await bcrypt.hash(password, 10);
-      
-            const avatarUrl = gravatar.url(email, { protocol: 'https', format: 'png' });
-      
-            console.log("You are now registered!");
-            
-            await User.create({ email, password: passwordHash, subscription, avatarURL: avatarUrl });
-
+            const verifyToken = crypto.randomUUID();
+        
+            await User.create({ email, verifyToken, password: passwordHash });
+  
+            await sendEmail({
+                to: email,
+                subject: `Welcome on board, ${email}`,
+                html: `To confirm your registration, please click on the link below: <a href="http://localhost:8080/api/users/verify/${verifyToken}">Click me</a>`,
+                text: `To confirm your registration, please open the link below: http://localhost:8080/api/users/verify/${verifyToken}`,
+            });
             return res.status(201).json({
                 status: "Created",
                 code: 201,

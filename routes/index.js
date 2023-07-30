@@ -1,5 +1,4 @@
 const express = require("express");
-
 const auth = require("../middleware/auth");
 
 const authRoutes = require("./auth");
@@ -9,7 +8,7 @@ const contactsRoutes = require("./contacts");
 const router = express.Router();
 
 router.use("/auth", authRoutes);
-router.use("/users", userRoutes);
 router.use("/contacts", auth, contactsRoutes);
+router.use("/users", userRoutes);
 
 module.exports = router;

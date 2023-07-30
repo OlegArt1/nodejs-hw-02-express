@@ -5,30 +5,34 @@ const userSchema = new mongoose.Schema(
     email:
     {
         type: String,
-        required: [ true, 'Email is required' ],
+        required: true,
         unique: true,
     },
     password:
     {
         type: String,
-        required: [ true, 'Set password for user' ],
-    },
-    subscription:
-    {
-        type: String,
-        enum: [ 'starter', 'pro', 'business' ],
-        default: 'starter',
+        required: true,
     },
     token:
     {
         type: String,
         default: null,
     },
-    avatarURL:
+    avatar:
     {
         type: String,
         default: null,
     },
+    verified:
+    {
+        type: Boolean,
+        default: false,
+    },
+    verifyToken:
+    {
+        type: String,
+        default: null,
+    }
 },
 {
     versionKey: false,

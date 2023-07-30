@@ -1,20 +1,24 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const User = require("../../models/users");
 
-//const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_SECRET = 'd5hddr4h43hgf5gfgf';
+const JWT_SECRET = 'd5hddr4h43hgf5gfgfd';
 
 async function login (req, res, next)
 {
-    const { email, password, subscription } = req.body;
-
+    const { email, password } = req.body;
+  
     try
     {
         const user = await User.findOne({ email });
-
+  
+        if (user.verified !== true)
+        {
+            return res.status(401).json({ message: "Please verify your account first" });
+        }
         const isMatch = await bcrypt.compare(password, user.password);
-    
+  
         if (typeof subscription !== "string" && typeof subscription !== "undefined")
         {
             console.log("Login validation error!");
@@ -62,9 +66,9 @@ async function login (req, res, next)
         }
         else
         {
-            const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
-
-            const loginId = await User.updateOne({ _id: user._id }, { $set: { token } });
+            const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+      
+            await User.updateOne({ _id: user._id }, { $set: { token } });
 
             console.log("Login success response!");
             
@@ -100,7 +104,7 @@ async function login (req, res, next)
             },
             message: "Login validation error!"
         });
-        return next(error);
+        return next(error);  
     }
 };
 module.exports = { login };
