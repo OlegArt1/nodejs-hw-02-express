@@ -44,7 +44,7 @@ function authorization (req, res, next)
 
                 return res.status(401).json({ error: "Token error!" });
             }
-            if (user.verified !== true)
+            if (user.verify !== true)
             {
                 console.log("Token expired!");
                 
