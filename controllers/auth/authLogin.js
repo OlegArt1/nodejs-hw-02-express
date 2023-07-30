@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../../models/users");
 
-const JWT_SECRET = 'd5hddr4h43hgf5gfgfd';
+const JWT_SECRET = 'd5hddr4h43hgf5gfgfdh';
 
 async function login (req, res, next)
 {
@@ -66,7 +66,7 @@ async function login (req, res, next)
         }
         else
         {
-            const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
+            const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
       
             await User.updateOne({ _id: user._id }, { $set: { token } });
 

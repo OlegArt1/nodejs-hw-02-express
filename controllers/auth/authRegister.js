@@ -47,7 +47,7 @@ async function registered (req, res, next)
             const passwordHash = await bcrypt.hash(password, 10);
             const verifyToken = crypto.randomUUID();
         
-            await User.create({ email, verificationToken, password: passwordHash });
+            await User.create({ email, password: passwordHash, verificationToken: verifyToken });
   
             await sendEmail({
                 to: email,

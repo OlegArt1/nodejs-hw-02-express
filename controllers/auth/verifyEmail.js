@@ -7,7 +7,7 @@ async function verify (req, res, next)
     try
     {
         const user = await User.findOne({ verificationToken: token });
-  
+  console.log(`User - ${user}; Token - ${token};`);
         if (user === null)
         {
             console.log("Verification user not found!");
