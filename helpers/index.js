@@ -7,8 +7,8 @@ async function sendEmail (message)
         port: 2525,
         auth:
         {
-            user: '35656b9059b1e0',
-            pass: 'c9b34baa48ad8e',
+            user: process.env.MAILTRAP_USER,
+            pass: process.env.MAILTRAP_PASS,
         },
     });
     message["from"] = "art777oleg@gmail.com";

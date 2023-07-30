@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../../models/users");
 
-const JWT_SECRET = 'd5hddr4h43hgf5gfgfdh';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 async function login (req, res, next)
 {
