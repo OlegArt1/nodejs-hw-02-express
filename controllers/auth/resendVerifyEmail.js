@@ -18,32 +18,32 @@ async function resendVerifyEmail (req, res, next)
     
         if (user === null)
         {
-            console.log("Email not found!");
+            console.log("Missing required field email!");
     
             return res.status(401).json({
-                status: "Bad Request",
+                status: "Bad request",
                 code: 401,
                 contentType: "application/json",
                 responseBody:
                 {
-                    message: "Not found"
+                    message: "Email not found"
                 },
-                messageError: "Email not found"
+                messageError: "Missing required field email"
             });
         }
         else if (user.verify)
         {
-            console.log("Resend email for verified user!");
+            console.log("Verification has already been passed!");
 
             return res.status(400).json({    
-                status: "Bad Request",
+                status: "Bad request",
                 code: 400,
                 contentType: "application/json",
                 responseBody:
                 {
                     message: "Verification has already been passed"
                 },
-                messageError: "Resend email for verified user"
+                messageError: "Verification has already been passed"
             });
         }
         else
@@ -72,7 +72,7 @@ async function resendVerifyEmail (req, res, next)
         console.log("Internal server error!");
         console.log(error);
 
-        res.status(404).json({ message: "Internal server error!" });
+        res.status(500).json({ message: "Internal server error" });
 
         return next(error);
     }
