@@ -7,8 +7,8 @@ async function verify (req, res, next)
     try
     {
         const user = await User.findOne({ verificationToken: token });
-  console.log(`User - ${user}; Token - ${token};`);
-        if (user === null)
+
+        if (!user)
         {
             console.log("Verification user not found!");
 
@@ -19,7 +19,7 @@ async function verify (req, res, next)
                 {
                     message: "User not found"
                 },
-                messageError: "Invalid token"
+                messageError: "Verification user not found"
             });
         }
         else
@@ -43,6 +43,11 @@ async function verify (req, res, next)
     }
     catch (error)
     {
+        console.log("Internal server error!");
+        console.log(error);
+
+        res.status(404).json({ message: "Internal server error!" });
+
         return next(error);
     }
 };

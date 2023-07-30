@@ -52,7 +52,7 @@ async function registered (req, res, next)
             await sendEmail({
                 to: email,
                 subject: `Welcome on board, ${email}`,
-                html: `To confirm your registration, please click on the link below: <a href="http://localhost:8000/api/users/verify/${verifyToken}">Click me</a>`,
+                html: `To confirm your registration, please click on the link below: <a href="http://localhost:8000/api/users/verify/${verifyToken}">Click to confirm your registration</a>`,
                 text: `To confirm your registration, please open the link below: http://localhost:8000/api/users/verify/${verifyToken}`,
             });
             return res.status(201).json({

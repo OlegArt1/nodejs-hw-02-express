@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
     verificationToken:
     {
         type: String,
-        default: null,
+        required: [true, 'Verify token is required'],
     }
 },
 {

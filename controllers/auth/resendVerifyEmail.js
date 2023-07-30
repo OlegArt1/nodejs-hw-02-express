@@ -48,14 +48,12 @@ async function resendVerifyEmail (req, res, next)
         }
         else
         {
-            const verifyEmail =
-            {
+            await sendEmail({
                 to: email,
                 subject: "Сonfirm your registration",
-                html: `<a target="_blank" href="http://localhost:8000/api/users/verify/${user.verificationToken}">Click to confirm your registration</a>`,
-            };
-            await sendEmail(verifyEmail);
-
+                html: `To confirm your registration, please click on the link below: <a href="http://localhost:8000/api/users/verify/${user.verificationToken}">Click to confirm your registration</a>`,
+                text: `To confirm your registration, please open the link below: http://localhost:8000/api/users/verify/${user.verificationToken}`,
+            });
             console.log("Resending a email success response!");
     
             return res.status(200).json ({    
@@ -71,6 +69,11 @@ async function resendVerifyEmail (req, res, next)
     }
     catch (error)
     {
+        console.log("Internal server error!");
+        console.log(error);
+
+        res.status(404).json({ message: "Internal server error!" });
+
         return next(error);
     }
 };
