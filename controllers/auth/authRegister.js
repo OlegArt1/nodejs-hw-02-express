@@ -1,4 +1,5 @@
 const crypto = require("node:crypto");
+const gravatar = require("gravatar");
 const bcrypt = require("bcrypt");
 
 const User = require("../../models/users");
@@ -6,7 +7,7 @@ const { sendEmail } = require("../../helpers/index");
 
 async function registered (req, res, next)
 {
-    const { email, password } = req.body;
+    const { email, password, subscription } = req.body;
   
     try
     {
@@ -45,10 +46,18 @@ async function registered (req, res, next)
         else
         {      
             const passwordHash = await bcrypt.hash(password, 10);
+
             const verifyToken = crypto.randomUUID();
         
-            await User.create({ email, password: passwordHash, verificationToken: verifyToken });
-  
+            const avatarUrl = gravatar.url(email, { protocol: 'https', format: 'png' });
+
+            await User.create({
+                email,
+                password: passwordHash,
+                subscription,
+                avatarURL: avatarUrl,
+                verificationToken: verifyToken,
+            });
             await sendEmail({
                 to: email,
                 subject: `Welcome on board, ${email}`,

@@ -3,6 +3,7 @@ const Jimp = require("jimp");
 async function resizeImage (sizeImage)
 {
     await Jimp.read(sizeImage)
+    
         .then((avatar) =>
         {
             return avatar.resize(250, 250).write(sizeImage);

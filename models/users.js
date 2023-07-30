@@ -13,12 +13,18 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: true,
     },
-    token:
+    subscription:
+    {
+        type: String,  
+        enum: [ 'starter', 'pro', 'business' ],
+        default: 'starter',
+    },
+    avatarURL:
     {
         type: String,
         default: null,
     },
-    avatar:
+    token:
     {
         type: String,
         default: null,

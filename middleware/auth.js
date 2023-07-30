@@ -44,14 +44,17 @@ function authorization (req, res, next)
 
                 return res.status(401).json({ error: "Token error!" });
             }
-            else
+            if (user.verified !== true)
             {
-                console.log(decode);
-
-                req.user = { id: user._id, name: user.name };
-
-                next();
+                console.log("Token expired!");
+                
+                return res.status(401).json({ error: "Token expired!" });
             }
+            console.log(decode);
+
+            req.user = { id: user._id, name: user.name };
+
+            next();
         }
         catch (error)
         {
