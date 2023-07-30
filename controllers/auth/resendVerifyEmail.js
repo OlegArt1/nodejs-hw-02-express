@@ -1,34 +1,77 @@
 require("dotenv").config();
 
 const User = require("../../models/users");
-const { HttpError, sendEmail } = require("../../helpers/index");
-
-const { BASE_URL } = process.env;
+const
+{
+//  HttpError,
+    sendEmail
+}
+= require("../../helpers/index");
 
 async function resendVerifyEmail (req, res, next)
 {
     const { email } = req.body;
 
-    const user = await User.findOne({email});
+    try
+    {
+        const user = await User.findOne({ email });
+    
+        if (user === null)
+        {
+            console.log("Email not found!");
+    
+            return res.status(401).json({
+                status: "Bad Request",
+                code: 401,
+                contentType: "application/json",
+                responseBody:
+                {
+                    message: "Not found"
+                },
+                messageError: "Email not found"
+            });
+        }
+        else if (user.verify)
+        {
+            console.log("Resend email for verified user!");
 
-    if (!user)
-    {
-        throw HttpError(401, "Email not found"); 
-    };
-    if (user.verify)
-    {
-        throw HttpError(400, "Verification has already been passed"); 
+            return res.status(400).json({    
+                status: "Bad Request",
+                code: 400,
+                contentType: "application/json",
+                responseBody:
+                {
+                    message: "Verification has already been passed"
+                },
+                messageError: "Resend email for verified user"
+            });
+        }
+        else
+        {
+            const verifyEmail =
+            {
+                to: email,
+                subject: "Сonfirm your registration",
+                html: `<a target="_blank" href="http://localhost:8000/api/users/verify/${user.verificationToken}">Click to confirm your registration</a>`,
+            };
+            await sendEmail(verifyEmail);
+
+            console.log("Resending a email success response!");
+    
+            return res.status(200).json ({    
+                status: "OK",
+                code: 200,
+                contentType: "application/json",
+                responseBody:
+                {
+                    message: "Verification email sent"
+                }
+            });
+        }
     }
-    const verifyEmail =
+    catch (error)
     {
-        to: email,
-        subject: "Сonfirm your registration",
-        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click to confirm your registration</a>`,
-    };
-    await sendEmail(verifyEmail);
-
-    res.status(200).json ({
-        message: "Verification email sent",
-    });
+        return next(error);
+    }
 };
 module.exports = { resendVerifyEmail };

@@ -13,7 +13,7 @@ async function login (req, res, next)
     {
         const user = await User.findOne({ email });
   
-        if (user.verified !== true)
+        if (user.verify !== true)
         {
             return res.status(401).json({ message: "Please verify your account first" });
         }

@@ -6,18 +6,40 @@ async function verify (req, res, next)
   
     try
     {
-        const user = await User.findOne({ verifyToken: token });
+        const user = await User.findOne({ verificationToken: token });
   
         if (user === null)
         {
-            return res.status(401).json({ message: "Invalid token" });
+            console.log("Verification user not found!");
+
+            return res.status(404).json({
+                status: "Not found",
+                code: 404,
+                responseBody:
+                {
+                    message: "User not found"
+                },
+                messageError: "Invalid token"
+            });
         }
-        await User.findByIdAndUpdate(user._id,
+        else
         {
-            verified: true,
-            verifyToken: null,
-        });
-        return res.json({ message: "User verified" });
+            await User.findByIdAndUpdate(user._id,
+            {
+                verify: true,
+                verificationToken: null,
+            });
+            console.log("Verification success response!");
+
+            return res.status(200).json({
+                status: "OK",
+                code: 200,
+                responseBody:
+                {
+                    message: "Verification successful"
+                }
+            });
+        }
     }
     catch (error)
     {

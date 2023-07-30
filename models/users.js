@@ -23,14 +23,15 @@ const userSchema = new mongoose.Schema(
         type: String,
         default: null,
     },
-    verified:
+    verify:
     {
         type: Boolean,
         default: false,
     },
-    verifyToken:
+    verificationToken:
     {
         type: String,
+        required: [true, 'Verify token is required'],
         default: null,
     }
 },

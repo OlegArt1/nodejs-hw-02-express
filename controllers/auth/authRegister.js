@@ -47,13 +47,13 @@ async function registered (req, res, next)
             const passwordHash = await bcrypt.hash(password, 10);
             const verifyToken = crypto.randomUUID();
         
-            await User.create({ email, verifyToken, password: passwordHash });
+            await User.create({ email, verificationToken, password: passwordHash });
   
             await sendEmail({
                 to: email,
                 subject: `Welcome on board, ${email}`,
-                html: `To confirm your registration, please click on the link below: <a href="http://localhost:8080/api/users/verify/${verifyToken}">Click me</a>`,
-                text: `To confirm your registration, please open the link below: http://localhost:8080/api/users/verify/${verifyToken}`,
+                html: `To confirm your registration, please click on the link below: <a href="http://localhost:8000/api/users/verify/${verifyToken}">Click me</a>`,
+                text: `To confirm your registration, please open the link below: http://localhost:8000/api/users/verify/${verifyToken}`,
             });
             return res.status(201).json({
                 status: "Created",

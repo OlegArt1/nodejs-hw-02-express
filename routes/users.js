@@ -6,7 +6,7 @@ const express = require("express");
 
 const
 {
-    Avatar, VerificationEmail,
+    Avatar, VerificationEmail, ResendVerificationEmail,
 }
 = require("../controllers/auth/index");
 
@@ -31,7 +31,9 @@ const storage = multer.diskStorage(
 });
 const upload = multer({ storage, limits: { fileSize: 1000000 } });
 
+router.use(express.json());
 router.get("/verify/:token", VerificationEmail.verify);
+router.post("/verify", ResendVerificationEmail.resendVerifyEmail);
 router.patch("/avatar", upload.single("image"), Avatar.updateAvatar);
 
 module.exports = router;
